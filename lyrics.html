@@ -60,16 +60,20 @@ async function fetchSyncedTiming(){
     if(!Array.isArray(records))throw new Error('Unexpected timing response');
     const candidates=records.filter(x=>x&&x.syncedLyrics&&x.trackName&&x.artistName)
       .filter(x=>normLyric(x.trackName)==='no other heart'&&normLyric(x.artistName).includes('mac demarco'))
-      .sort((a,b)=>Math.abs((a.duration||173)-173)-Math.abs((b.duration||173)-173));
-    const data=candidates[0];
-    if(!data)throw new Error('No synced lyric record found');
-    const timed=data.syncedLyrics.split(/\r?\n/).map(line=>{
-      const m=line.match(/^\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]\s*(.*)$/);
-      if(!m)return null;
-      const frac=m[3]?(Number('0.'+m[3])):0;
-      return {time:Number(m[1])*60+Number(m[2])+frac,raw:m[4].trim(),text:normLyric(m[4])};
-    }).filter(x=>x&&x.text);
-    if(!timed.length)throw new Error('Synced timestamps were empty');
+      .map(record=>({
+        record,
+        timed:record.syncedLyrics.split(/\r?\n/).map(line=>{
+          const m=line.match(/^\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]\s*(.*)$/);
+          if(!m)return null;
+          const frac=m[3]?(Number('0.'+m[3])):0;
+          return {time:Number(m[1])*60+Number(m[2])+frac,raw:m[4].trim(),text:normLyric(m[4])};
+        }).filter(x=>x&&x.text)
+      }))
+      .filter(x=>x.timed.length>0)
+      .sort((a,b)=>Math.abs((a.record.duration||173)-173)-Math.abs((b.record.duration||173)-173));
+    const match=candidates[0];
+    if(!match)throw new Error('No record with actual timed lyric text found');
+    const timed=match.timed;
     const original=parse();
     cues=timed.map(t=>{
       const moodCue=original.find(c=>{
