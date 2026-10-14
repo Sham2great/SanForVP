@@ -330,17 +330,19 @@ async function fetchSyncedTiming(){
 // Use the hand-verified cue timings in the editor; do not overwrite them with a different database version.
 
 
-/* Boot once per page load; replay resets the ending without replaying startup. */
+/* Boot once per page load; replay resets the complete experience. */
 const bootScreen=$('bootScreen'),endingScreen=$('endingScreen');
-function dismissBoot(){if(bootScreen)bootScreen.classList.add('boot-hidden')}
+let bootTimer=null,endingTimer=null;
+function dismissBoot(){if(bootScreen)bootScreen.classList.add('boot-hidden');if(bootTimer){clearTimeout(bootTimer);bootTimer=null}}
+function startBoot(){if(!bootScreen)return;dismissBoot();bootScreen.classList.remove('boot-hidden');const track=bootScreen.querySelector('.boot-track i');if(track){track.style.animation='none';void track.offsetWidth;track.style.animation=''}const status=$('bootStatus');if(status)status.textContent='Starting music subsystem...';bootTimer=window.setTimeout(dismissBoot,2200)}
 if($('bootSkip'))$('bootSkip').onclick=dismissBoot;
-window.setTimeout(dismissBoot,2200);
-function closeEnding(){endingScreen.classList.remove('ending-visible');endingScreen.setAttribute('aria-hidden','true');document.body.classList.remove('system-ended')}
+bootTimer=window.setTimeout(dismissBoot,2200);
+function closeEnding(){if(endingTimer){clearTimeout(endingTimer);endingTimer=null}endingScreen.classList.remove('ending-visible');endingScreen.setAttribute('aria-hidden','true');document.body.classList.remove('system-ended')}
 if($('endingOk'))$('endingOk').onclick=closeEnding;
-audio.onended=()=>{ $('play').textContent='▶ REPLAY';$('process').textContent='playback complete';$('bars').classList.remove('playing');line('end of transmission.','dreamy');document.body.classList.add('system-ended');window.setTimeout(()=>{endingScreen.classList.add('ending-visible');endingScreen.setAttribute('aria-hidden','false');$('endingOk').focus()},2400)};
+audio.onended=()=>{$('play').textContent='▶ REPLAY';$('process').textContent='playback complete';$('bars').classList.remove('playing');line('end of transmission.','dreamy');document.body.classList.add('system-ended');endingTimer=window.setTimeout(()=>{endingScreen.classList.add('ending-visible');endingScreen.setAttribute('aria-hidden','false');$('endingOk').focus()},2400)};
 const originalPlayClick=$('play').onclick;
-$('play').onclick=()=>{if(audio.ended||document.body.classList.contains('system-ended')){closeEnding();audio.currentTime=0;last=-1;line('♪','soft')}originalPlayClick()};
+$('play').onclick=()=>{if(audio.ended||document.body.classList.contains('system-ended')){closeEnding();audio.pause();audio.currentTime=0;last=-1;cues=parse();$('seek').value=0;$('now').textContent='00:00';$('play').textContent='▶ PLAY';$('process').textContent='song file connected';$('hint').textContent='READY';line('press PLAY to start the song.','soft');$('bars').classList.remove('playing');$('face').classList.remove('crying');if(cryTimer){clearTimeout(cryTimer);cryTimer=null}startBoot();return}originalPlayClick()};
 const originalRestartClick=$('restart').onclick;
-$('restart').onclick=()=>{closeEnding();originalRestartClick()};
+$('restart').onclick=()=>{closeEnding();audio.pause();audio.currentTime=0;last=-1;cues=parse();$('seek').value=0;$('now').textContent='00:00';$('play').textContent='▶ PLAY';$('process').textContent='song file connected';$('hint').textContent='READY';line('press PLAY to start the song.','soft');$('bars').classList.remove('playing');$('face').classList.remove('crying');if(cryTimer){clearTimeout(cryTimer);cryTimer=null}startBoot()};
 </script><div class="ending-screen" id="endingScreen" aria-hidden="true"><div class="ending-dialog" role="dialog" aria-modal="true" aria-labelledby="endingTitle"><div class="ending-title" id="endingTitle"><span>▣</span> lyrics.exe</div><div class="ending-body"><div class="ending-icon">×</div><div><p><strong>No other heart will do.</strong></p><p>The system has finished processing this feeling.</p><p class="ending-code">PROCESS: NOT RESPONDING</p></div></div><div class="ending-actions"><button class="btn primary" id="endingOk">OK</button></div></div></div>
 </body></html>
