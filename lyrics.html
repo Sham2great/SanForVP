@@ -121,6 +121,39 @@ body{background:#08090d;color:#e8e8ee}
 .inner label{color:#d7d4e0}
 .inner input,.inner textarea{background:#101117;color:#eae8f0;border-color:#050609 #454754 #454754 #050609}
 .footer{color:#777b8c;text-shadow:none;letter-spacing:.08em}
+
+/* Retro monochrome Win98-inspired theme, with a black desktop */
+body{background:#050505;color:#111;font-family:Tahoma,Verdana,sans-serif}
+.label{color:#d0d0d0;text-shadow:1px 1px #000;font:12px "Courier New",monospace}
+.window{background:#c0c0c0;border:2px solid;border-color:#fff #555 #555 #fff;box-shadow:3px 3px 0 #000;padding:3px}
+.bar{background:#000080;color:#fff;border:0;font-weight:bold}
+.icon{background:#c0c0c0;color:#000;border-color:#fff #555 #555 #fff}
+.dots i:last-child{background:#c0c0c0;border-color:#fff #555 #555 #fff}
+.dots i:last-child:after{color:#111}
+.content{padding:14px}
+.meta{color:#333}
+.title{color:#111;font-family:Georgia,"Times New Roman",serif;letter-spacing:0}
+.artist{color:#222;letter-spacing:.12em}
+.stage{background:#f4f1eb;color:#111;border-color:#555 #fff #fff #555}
+.face:after{border-color:#d5d0c8}
+.stickman line,.stickman circle,.stickman path.eye{stroke:#161616}
+.heart{color:#a34d6c;text-shadow:none}
+.lyric{color:#171717;font-family:Georgia,"Times New Roman",serif}
+.mood{color:#000080}
+.hint{color:#555}
+.btn{background:#c0c0c0;color:#111;border-color:#fff #555 #555 #fff;font-family:Tahoma,Verdana,sans-serif}
+.btn:active{border-color:#555 #fff #fff #555}
+.primary{color:#111}
+.seek{accent-color:#000080}
+.bars span{background:#000080}
+.status{border-top-color:#888;color:#333}
+.status strong{color:#000080}
+.setup{background:#c0c0c0;border-color:#888 #fff #fff #888}
+.setup summary{color:#111}
+.inner p,.inner small{color:#333}
+.inner label{color:#111}
+.inner input,.inner textarea{background:#fff;color:#111;border-color:#555 #fff #fff #555}
+.footer{color:#bdbdbd;text-shadow:1px 1px #000;letter-spacing:.06em}
 </style></head><body><main class="desktop"><div class="label">C:\\MUSIC\\NO_OTHER_HEART.EXE</div><section class="window"><div class="bar"><div class="brand"><span class="icon">♪</span> No Other Heart - Media Player</div><div class="dots"><i></i><i></i><i></i></div></div><div class="content"><div class="meta"><span>FILE: NO_OTHER_HEART.MP3</span><span id="state">STATUS: WAITING</span></div><h1 class="title">No Other Heart</h1><div class="artist">MAC DEMARCO</div><div class="bars" id="bars"></div><section class="stage"><div class="face" id="face" aria-label="animated stick figure walking back and forth"><span class="heart h1">♥</span><span class="heart h2">♥</span><span class="heart h3">♥</span><span class="heart h4">♥</span><svg class="stickman" viewBox="0 0 44 86" aria-hidden="true"><circle cx="22" cy="14" r="9"/><path class="eye eye1" d="M17 12 Q18.5 10 20 12"/><path class="eye eye2" d="M24 12 Q25.5 10 27 12"/><path class="tear tear1" d="M14 19 C12 22 9 26 10 29 C11 33 16 32 16 28 C16 25 14 22 14 19Z"/><path class="tear tear2" d="M29 19 C27 22 24 26 25 29 C26 33 31 32 31 28 C31 25 29 22 29 19Z"/><line class="torso" x1="22" y1="24" x2="22" y2="55"/><line class="arm arm1" x1="22" y1="32" x2="8" y2="46"/><line class="arm arm2" x1="22" y1="32" x2="36" y2="46"/><line class="leg leg1" x1="22" y1="55" x2="10" y2="79"/><line class="leg leg2" x1="22" y1="55" x2="34" y2="79"/></svg></div><div class="lyric" id="lyric" aria-live="polite">Lyrics have not been added yet.</div><div class="mood" id="mood">mood.exe / idle</div><div class="hint" id="hint">READY</div></section><div class="controls"><button class="btn primary" id="play">▶ PLAY</button><button class="btn" id="restart">↺</button><div><input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position"><div class="time"><span id="now">00:00</span><span id="duration">00:00</span></div></div><button class="btn volume" id="mute">♫ SOUND ON</button></div><div class="utility"><button class="btn" id="load">OPEN SONG FILE</button><button class="btn" id="demo">Ⅱ PAUSE WALK</button><button class="btn" id="full">FULL SCREEN</button></div><div class="status"><span>PROCESS: <strong id="process">awaiting audio file</strong></span><span>SYSTEM: WINDOWS 98 STYLE</span></div><details class="setup"><summary>FILE  |  SYNC SETTINGS / LYRICS</summary><div class="inner"><p>Choose your audio file and add lyric cues with timestamps. Format: seconds|mood|your text, one cue per line. Use lyrics you have permission to use.</p><label for="file">AUDIO FILE (.MP3)</label><input id="file" type="file" accept="audio/*"><small>The audio stays in your browser and is not uploaded.</small><label for="cues">TIMED LYRIC CUES</label><textarea id="cues" spellcheck="false">19|soft|22|Is it true?
 22|sad|26|You've been feeling sort of low these days
 26|sad|32|Just don't have a place to go these days
