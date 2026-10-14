@@ -261,6 +261,28 @@ body.system-ended .mood{color:#777}
 .ending-screen.ending-visible{backdrop-filter:blur(3px)}
 .ending-visible .ending-dialog{animation:endingArrival .85s cubic-bezier(.16,1,.3,1) both}
 @keyframes endingArrival{0%{opacity:0;transform:translateY(28px) scale(.94)}65%{opacity:1;transform:translateY(-3px) scale(1.01)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Grounded walking pass: feet stay near the floor, with a slower stride and visible body bounce. */
+.face .stickman{top:10px!important;animation:patrolWalk 10.5s linear infinite!important;will-change:transform}
+@keyframes patrolWalk{
+  0%{transform:translateX(8px) scaleX(1)}
+  47%{transform:translateX(184px) scaleX(1)}
+  50%{transform:translateX(184px) scaleX(-1)}
+  97%{transform:translateX(8px) scaleX(-1)}
+  100%{transform:translateX(8px) scaleX(1)}
+}
+.face .stickman .arm{transform-origin:22px 32px!important;animation:swingWalk .48s ease-in-out infinite alternate!important}
+.face .stickman .arm2{animation-delay:-.48s!important}
+.face .stickman .leg{transform-origin:22px 55px!important;animation:stepWalk .48s ease-in-out infinite alternate!important}
+.face .stickman .leg2{animation-delay:-.48s!important}
+.face .stickman .torso,.face .stickman circle{animation:bodyBounce .48s ease-in-out infinite alternate;transform-box:view-box;transform-origin:22px 42px}
+@keyframes swingWalk{from{transform:rotate(-28deg)}to{transform:rotate(28deg)}}
+@keyframes stepWalk{from{transform:rotate(-30deg)}to{transform:rotate(30deg)}}
+@keyframes bodyBounce{from{transform:translateY(0)}to{transform:translateY(-2px)}}
+.face.paused .stickman,.face.paused .stickman *{animation-play-state:paused!important}
+body.system-ended .face .stickman{top:39px!important;animation:stickmanFall 1.65s cubic-bezier(.22,.8,.25,1) forwards!important}
+body.system-ended .face .stickman .arm,body.system-ended .face .stickman .leg,body.system-ended .face .stickman .torso,body.system-ended .face .stickman circle{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.face .stickman{animation-duration:20s!important}.face .stickman .arm,.face .stickman .leg{animation-duration:1.2s!important}}
 </style></head><body>
 <div class="boot-screen" id="bootScreen" role="status" aria-label="System startup"><div class="boot-card"><div class="boot-head"><span>▣</span> Microsoft Windows 98</div><div class="boot-logo">windows<span>98</span></div><div class="boot-sub">NO OTHER HEART.EXE</div><div class="boot-track"><i></i></div><div class="boot-status" id="bootStatus">Starting music subsystem...</div><button class="btn boot-skip" id="bootSkip">SKIP STARTUP</button></div></div>
 <main class="desktop"><div class="label">C:\\MUSIC\\NO_OTHER_HEART.EXE</div><section class="window"><div class="bar"><div class="brand"><span class="icon">♪</span> No Other Heart - Media Player</div><div class="dots"><i></i><i></i><i></i></div></div><div class="content"><div class="meta"><span>FILE: NO_OTHER_HEART.MP3</span><span id="state">STATUS: WAITING</span></div><h1 class="title">No Other Heart</h1><div class="artist">MAC DEMARCO</div><div class="bars" id="bars"></div><section class="stage"><div class="face" id="face" aria-label="animated stick figure walking back and forth"><span class="heart h1">♥</span><span class="heart h2">♥</span><span class="heart h3">♥</span><span class="heart h4">♥</span><svg class="stickman" viewBox="0 0 44 86" aria-hidden="true"><circle cx="22" cy="14" r="9"/><path class="eye eye1" d="M17 12 Q18.5 10 20 12"/><path class="eye eye2" d="M24 12 Q25.5 10 27 12"/><path class="tear tear1" d="M14 19 C12 22 9 26 10 29 C11 33 16 32 16 28 C16 25 14 22 14 19Z"/><path class="tear tear2" d="M29 19 C27 22 24 26 25 29 C26 33 31 32 31 28 C31 25 29 22 29 19Z"/><line class="torso" x1="22" y1="24" x2="22" y2="55"/><line class="arm arm1" x1="22" y1="32" x2="8" y2="46"/><line class="arm arm2" x1="22" y1="32" x2="36" y2="46"/><line class="leg leg1" x1="22" y1="55" x2="10" y2="79"/><line class="leg leg2" x1="22" y1="55" x2="34" y2="79"/></svg></div><div class="lyric" id="lyric" aria-live="polite">Lyrics have not been added yet.</div><div class="mood" id="mood">mood.exe / idle</div><div class="hint" id="hint">READY</div></section><div class="controls"><button class="btn primary" id="play">▶ PLAY</button><button class="btn" id="restart">↺</button><div><input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position"><div class="time"><span id="now">00:00</span><span id="duration">00:00</span></div></div><button class="btn volume" id="mute">♫ SOUND ON</button></div><div class="utility"><button class="btn" id="load">OPEN SONG FILE</button><button class="btn" id="demo">Ⅱ PAUSE WALK</button><button class="btn" id="full">FULL SCREEN</button></div><div class="status"><span>PROCESS: <strong id="process">awaiting audio file</strong></span><span>SYSTEM: WINDOWS 98 STYLE</span></div><details class="setup"><summary>FILE  |  SYNC SETTINGS / LYRICS</summary><div class="inner"><p>Choose your audio file and add lyric cues with timestamps. Format: seconds|mood|your text, one cue per line. Use lyrics you have permission to use.</p><label for="file">AUDIO FILE (.MP3)</label><input id="file" type="file" accept="audio/*"><small>The audio stays in your browser and is not uploaded.</small><label for="cues">TIMED LYRIC CUES</label><textarea id="cues" spellcheck="false">19|soft|22|Is it true?
