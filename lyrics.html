@@ -70,8 +70,19 @@ async function fetchSyncedTiming(){
     for(const cue of original){
       const needle=normLyric(cue.text);
       let found=-1;
+      // A displayed cue can contain multiple sung lines, so compare it against
+      // short consecutive runs from the synced source instead of requiring one
+      // source line to contain the entire cue.
       for(let j=cursor;j<timed.length;j++){
-        if(timed[j].text===needle || (needle.length>10 && timed[j].text.includes(needle)) || (timed[j].text.length>10 && needle.includes(timed[j].text))){found=j;break}
+        let combined='';
+        for(let k=j;k<Math.min(timed.length,j+7);k++){
+          combined+=timed[k].text;
+          if(combined===needle || (needle.length>10 && combined.includes(needle)) || (combined.length>10 && needle.includes(combined))){
+            found=j;break;
+          }
+          if(combined.length>needle.length+24)break;
+        }
+        if(found>=0)break;
       }
       if(found<0)throw new Error('The timed lines did not match this version');
       matched.push({...cue,time:timed[found].time});cursor=found+1;
