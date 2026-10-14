@@ -62,33 +62,21 @@ async function fetchSyncedTiming(){
       const m=line.match(/^\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]\s*(.*)$/);
       if(!m)return null;
       const frac=m[3]?(Number('0.'+m[3])):0;
-      return {time:Number(m[1])*60+Number(m[2])+frac,text:normLyric(m[4])};
+      return {time:Number(m[1])*60+Number(m[2])+frac,raw:m[4].trim(),text:normLyric(m[4])};
     }).filter(x=>x&&x.text);
     const original=parse();
     if(!original.length||!timed.length)throw new Error('Timing data was empty');
-    let cursor=0;const matched=[];
-    for(const cue of original){
-      const needle=normLyric(cue.text);
-      let found=-1;
-      // A displayed cue can contain multiple sung lines, so compare it against
-      // short consecutive runs from the synced source instead of requiring one
-      // source line to contain the entire cue.
-      for(let j=cursor;j<timed.length;j++){
-        let combined='';
-        for(let k=j;k<Math.min(timed.length,j+7);k++){
-          combined+=timed[k].text;
-          if(combined===needle || (needle.length>10 && combined.includes(needle)) || (combined.length>10 && needle.includes(combined))){
-            found=j;break;
-          }
-          if(combined.length>needle.length+24)break;
-        }
-        if(found>=0)break;
-      }
-      if(found<0)throw new Error('The timed lines did not match this version');
-      matched.push({...cue,time:timed[found].time});cursor=found+1;
-    }
-    cues=matched;
-    $('process').textContent='synced timing loaded · '+cues.length+' lyric cues';
+    // Use the source's own timestamp for every displayed lyric line. The
+    // previous version tried to squeeze whole lyric phrases onto one timestamp,
+    // which caused timing drift and false fallbacks when a phrase spanned lines.
+    cues=timed.map(t=>{
+      const moodCue=original.find(c=>{
+        const a=normLyric(c.text),b=t.text;
+        return a===b || (a.length>10&&a.includes(b)) || (b.length>10&&b.includes(a));
+      });
+      return {time:t.time,m:moodCue?moodCue.m:'neutral',text:t.raw};
+    });
+    $('process').textContent='synced timing loaded · '+cues.length+' timed lines';
     $('hint').textContent='SYNC SOURCE: TIMED LYRICS';
   }catch(err){
     cues=parse();
